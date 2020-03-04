@@ -4,7 +4,13 @@ namespace App\Helpers;
 
 class Config
 {
-    public static function get(string $filename, string $key = null) 
+    /**
+     * get full array or a single string of data based on the given filename and key
+     * @param string $filename desired file name to get the data
+     * @param string|null $key Key of the key pair value of the data
+     * @return array|mixed Can return array or a single string
+     */
+    public static function get(string $filename, string $key = null)
     {
         $fileContent = static::getFileContent($filename);
         if($key === null)
