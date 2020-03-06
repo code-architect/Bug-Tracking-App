@@ -42,7 +42,8 @@ class Config
             }
         }catch (\Throwable $exception){
             throw new NotFoundException(
-                sprintf('The specified file %s was not found', $filename)
+                sprintf('The specified file %s was not found', $filename),
+                ['file not found', 'data is passed']
             );
         }
         return $fileContent;
