@@ -1,7 +1,7 @@
 {
   "name": "code-architect/bug-tracking-app",
   "require": {
-
+    "ext-json": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "^7"

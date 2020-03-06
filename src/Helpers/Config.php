@@ -2,6 +2,8 @@
 declare(strict_types = 1);
 namespace App\Helpers;
 
+use App\Exception\NotFoundException;
+
 class Config
 {
     /**
@@ -9,6 +11,7 @@ class Config
      * @param string $filename desired file name to get the data
      * @param string|null $key Key of the key pair value of the data
      * @return array|mixed Can return array or a single string
+     * @throws NotFoundException
      */
     public static function get(string $filename, string $key = null)
     {
@@ -24,6 +27,7 @@ class Config
      * Get the configuration data from the given filename
      * @param string $filename name of the file
      * @return array
+     * @throws NotFoundException
      */
     public static function getFileContent(string $filename) : array
     {
@@ -37,7 +41,7 @@ class Config
                 $fileContent = require $path;
             }
         }catch (\Throwable $exception){
-            throw new \RuntimeException(
+            throw new NotFoundException(
                 sprintf('The specified file %s was not found', $filename)
             );
         }
