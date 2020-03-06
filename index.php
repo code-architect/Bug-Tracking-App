@@ -4,10 +4,6 @@ require_once __DIR__.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.
 
 require_once __DIR__.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.'Exception'.DIRECTORY_SEPARATOR.'exception.php';
 
-$app = new \App\Helpers\App();
+$logger = new \App\Logger\Logger();
 
-echo $app->getEnvironment().PHP_EOL;
-echo $app->getLogPath().PHP_EOL;
-echo $app->isDebugMode().PHP_EOL;
-echo $app->isRunningFromConsole().PHP_EOL;
-echo $app->getServerTime()->format('Y-m-d H:i:s').PHP_EOL;
+$logger->log(\App\Logger\Loglevel::ALERT, 'hello world', ['exception' => 'record occurred']);
