@@ -2,9 +2,14 @@
 
 require_once __DIR__.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php';
 
+require_once __DIR__.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR.'Exception'.DIRECTORY_SEPARATOR.'exception.php';
+
 $app = new \App\Helpers\App();
 
-set_exception_handler([new \App\Exception\ExceptionHandler(), 'handle']);
+
+
+$db = new mysqli('vvwvw', 'root', '', 'test');
+exit;
 
 $config = \App\Helpers\Config::getFileContent('jbjbvj');
 
