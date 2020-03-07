@@ -11,4 +11,13 @@ class ApplicationTest extends TestCase
     {
         static::assertInstanceOf(App::class, new App());
     }
+
+    public function testItCanGetBasicAppDataSetFromAppClass()
+    {
+        $app = new App();
+        self::assertTrue($app->isRunningFromConsole());
+        self::assertSame('local', $app->getEnvironment());
+        self::assertNotNull($app->getLogPath());
+        $this->assertInstanceOf(\DateTime::class, $app->getServerTime());
+    }
 }
