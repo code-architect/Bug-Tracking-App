@@ -29,7 +29,7 @@ class PDOConnection extends AbstractConnection implements DatabaseConnectionInte
         return $this;
     }
 
-    public function getConnection()
+    public function getConnection(): PDO
     {
         return $this->conn;
     }
