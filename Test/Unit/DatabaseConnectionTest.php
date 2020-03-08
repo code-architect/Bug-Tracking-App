@@ -22,6 +22,16 @@ class DatabaseConnectionTest extends TestCase
         $credentials = $this->getCredentials('pdo');
         $pdo = (new PDOConnection($credentials))->connect();
         self::assertInstanceOf(DatabaseConnectionInterface::class, $pdo, 'It is an instance of');
+        return $pdo;
+    }
+
+    /**
+     * @param DatabaseConnectionInterface $handler Interface
+     * @depends testItCanConnectToDatabaseWithPdoApi
+     */
+    public function testItIsAValidPdoConnection(DatabaseConnectionInterface $handler)
+    {
+        self::assertInstanceOf(\PDO::class, $handler->getConnection());
     }
 
     private function getCredentials(string $type)
