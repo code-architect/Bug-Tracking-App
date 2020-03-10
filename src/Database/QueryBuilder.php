@@ -3,17 +3,20 @@ namespace App\Database;
 
 use App\Contracts\DatabaseConnectionInterface;
 use App\Exception\NotFoundException;
+use http\Exception\InvalidArgumentException;
 use phpDocumentor\Reflection\Types\Self_;
 
  class QueryBuilder
 {
+    use Query;
+
     protected $conn;    // pdo or mysqli
     protected $table;
     protected $statement;
     protected $fields;
     protected $placeholders;
     protected $bindings;
-    protected $operation; //dml statement like SELECT, UPDATE, DELETE etc
+    protected $operation = self::DML_TYPE_SELECT; //dml statement like SELECT, UPDATE, DELETE etc
 
     const OPERATORS = ['=', '>=', '>', '<=', '<', '<>'];
     const PLACEHOLDER = '?';
@@ -22,6 +25,8 @@ use phpDocumentor\Reflection\Types\Self_;
     const DML_TYPE_INSERT = 'INSERT';
     const DML_TYPE_UPDATE = 'UPDATE';
     const DML_TYPE_DELETE = 'DELETE';
+
+    public $query;
 
     public function __construct(DatabaseConnectionInterface $connection)
     {
@@ -45,12 +50,22 @@ use phpDocumentor\Reflection\Types\Self_;
             }
         }
         $this->passWhere([$column => $value], $operator);
+        $this->query = $this->getQuery($this->operation);
+
+        return $this;
+    }
+
+    public function select(string $fields = self::COLUMNS)
+    {
+        $this->operation = self::DML_TYPE_SELECT;
+        $this->fields = $fields;
         return $this;
     }
 
 
+
     //----------------------------------------------- Internals Methods -----------------------------------//
-    protected function passWhere(array $conditions, string $operator)
+    private function passWhere(array $conditions, string $operator)
     {
         foreach ($conditions as $column => $value)
         {
