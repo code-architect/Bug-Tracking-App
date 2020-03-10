@@ -5,7 +5,7 @@ use App\Contracts\DatabaseConnectionInterface;
 use App\Exception\NotFoundException;
 use phpDocumentor\Reflection\Types\Self_;
 
-abstract class QueryBuilder
+ class QueryBuilder
 {
     protected $conn;    // pdo or mysqli
     protected $table;
@@ -52,6 +52,29 @@ abstract class QueryBuilder
     //----------------------------------------------- Internals Methods -----------------------------------//
     protected function passWhere(array $conditions, string $operator)
     {
-        
+        foreach ($conditions as $column => $value)
+        {
+            $this->placeholders[] = sprintf('%s %s %s', $column, $operator, self::PLACEHOLDER);
+            $this->bindings[] = $value;
+        }
+        return $this;
     }
+
+     /**
+      * @return mixed
+      */
+     public function getPlaceholders()
+     {
+         return $this->placeholders;
+     }
+
+     /**
+      * @return mixed
+      */
+     public function getBindings()
+     {
+         return $this->bindings;
+     }
+
+
 }

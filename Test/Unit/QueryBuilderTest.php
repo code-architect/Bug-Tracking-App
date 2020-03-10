@@ -1,17 +1,38 @@
 <?php
 namespace Test\Unit;
 
+use App\Database\PDOConnection;
+use App\Database\QueryBuilder;
+use App\Helpers\Config;
 use PHPUnit\Framework\TestCase;
 
 class QueryBuilderTest extends TestCase
 {
+    /**
+     * @var QueryBuilder $queryBuilder
+     */
     private $queryBuilder;
 
     protected function setUp()
     {
-        $this->queryBuilder = new QueryBuilder();
+        $pdo = new PDOConnection(Config::get('database', 'pdo'), ['db_name' =>  'bug_app_testing']);
+        $this->queryBuilder = new QueryBuilder(
+            $pdo->connect()
+        );
         parent::setUp();
     }
+
+
+    public function testBindings()
+    {
+        $query = $this->queryBuilder->where('id', 7)->where('report_type', '>=', '100');
+        self::assertIsArray($query->getPlaceholders());
+        self::assertIsArray($query->getBindings());
+
+        var_dump($query->getPlaceholders());
+        exit();
+    }
+
 
     protected function tearDown()
     {
