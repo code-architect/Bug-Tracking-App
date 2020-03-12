@@ -6,7 +6,7 @@ use App\Exception\NotFoundException;
 use http\Exception\InvalidArgumentException;
 use phpDocumentor\Reflection\Types\Self_;
 
- class QueryBuilder
+ abstract class QueryBuilder
 {
     use Query;
 
@@ -95,7 +95,7 @@ use phpDocumentor\Reflection\Types\Self_;
 
     public function first()
     {
-        
+
     }
 
 
