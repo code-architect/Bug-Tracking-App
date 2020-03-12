@@ -26,7 +26,6 @@ use phpDocumentor\Reflection\Types\Self_;
     const DML_TYPE_UPDATE = 'UPDATE';
     const DML_TYPE_DELETE = 'DELETE';
 
-    public $query;
 
     public function __construct(DatabaseConnectionInterface $connection)
     {
@@ -50,10 +49,12 @@ use phpDocumentor\Reflection\Types\Self_;
             }
         }
         $this->passWhere([$column => $value], $operator);
-        $this->query = $this->getQuery($this->operation);
-
+        $query = $this->prepare($this->getQuery($this->operation));
+        $this->statement = $this->execute($query);
         return $this;
     }
+
+    //---------------------------------- CURD & Database Methods ---------------------------------------//
 
     public function select(string $fields = self::COLUMNS)
     {
@@ -62,6 +63,40 @@ use phpDocumentor\Reflection\Types\Self_;
         return $this;
     }
 
+    public function create(array $data)
+    {
+
+    }
+
+    public function update(array $data)
+    {
+
+    }
+
+    public function delete()
+    {
+
+    }
+
+    public function raw($query)
+    {
+
+    }
+
+    public function find($id)
+    {
+
+    }
+
+    public function findOneBy(string $field, $value)
+    {
+
+    }
+
+    public function first()
+    {
+        
+    }
 
 
     //----------------------------------------------- Internals Methods -----------------------------------//
@@ -75,21 +110,13 @@ use phpDocumentor\Reflection\Types\Self_;
         return $this;
     }
 
-     /**
-      * @return mixed
-      */
-     public function getPlaceholders()
-     {
-         return $this->placeholders;
-     }
-
-     /**
-      * @return mixed
-      */
-     public function getBindings()
-     {
-         return $this->bindings;
-     }
+    //----------------------------------------------- Abstract Methods -----------------------------------//
+    abstract public function get();
+    abstract public function count();
+    abstract public function lastInsertedId();
+    abstract public function prepare($query);
+    abstract public function execute($statement);
+    abstract public function fetchInto($className);
 
 
 }
