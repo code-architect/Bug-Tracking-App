@@ -2,7 +2,6 @@
 namespace App\Database;
 
 use App\Contracts\DatabaseConnectionInterface;
-use App\Exception\NotFoundException;
 use http\Exception\InvalidArgumentException;
 use phpDocumentor\Reflection\Types\Self_;
 
@@ -45,7 +44,7 @@ use phpDocumentor\Reflection\Types\Self_;
                 $value = $operator;
                 $operator = self::OPERATORS[0];
             }else{
-                throw new NotFoundException('Operator is not valid', ['operator' => $operator]);
+                throw new \App\Exception\InvalidArgumentException('Operator is not valid', ['operator' => $operator]);
             }
         }
         $this->passWhere([$column => $value], $operator);
@@ -65,7 +64,19 @@ use phpDocumentor\Reflection\Types\Self_;
 
     public function create(array $data)
     {
+        $this->fields = '`' . implode('`, `', array_keys($data)) . '`';
+        foreach ($data as $value){
+            $this->placeholders[] = self::PLACEHOLDER;
+            $this->bindings[] = $value;
+        }
+        $query = $this->prepare($this->getQuery(self::DML_TYPE_INSERT));
 
+//        var_dump($query);
+//        exit(); var_dump($query);
+//        exit();
+        $this->statement = $this->execute($query);
+
+        return $this->lastInsertedId();
     }
 
     public function update(array $data)
@@ -80,22 +91,24 @@ use phpDocumentor\Reflection\Types\Self_;
 
     public function raw($query)
     {
-
+        $query = $this->prepare($query);
+        $this->statement = $this->execute($query);
+        return $this;
     }
 
     public function find($id)
     {
-
+        return $this->where('id', $id)->first();
     }
 
     public function findOneBy(string $field, $value)
     {
-
+        return $this->where($field, $value)->first();
     }
 
     public function first()
     {
-
+        return $this->count() ? $this->get()[0] : "";
     }
 
 
