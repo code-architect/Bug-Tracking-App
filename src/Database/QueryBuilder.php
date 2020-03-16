@@ -70,10 +70,6 @@ use phpDocumentor\Reflection\Types\Self_;
             $this->bindings[] = $value;
         }
         $query = $this->prepare($this->getQuery(self::DML_TYPE_INSERT));
-
-//        var_dump($query);
-//        exit(); var_dump($query);
-//        exit();
         $this->statement = $this->execute($query);
 
         return $this->lastInsertedId();

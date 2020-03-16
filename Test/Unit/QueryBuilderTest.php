@@ -1,6 +1,8 @@
 <?php
 namespace Test\Unit;
 
+use App\Database\MySQLiConnection;
+use App\Database\MySQLiQueryBuilder;
 use App\Database\PDOConnection;
 use App\Database\PDOQueryBuilder;
 use App\Database\QueryBuilder;
@@ -16,9 +18,9 @@ class QueryBuilderTest extends TestCase
 
     protected function setUp()
     {
-        $credentials = array_merge(Config::get('database', 'pdo'), ['db_name' =>  'bug_app_testing']);
-        $pdo = new PDOConnection($credentials);
-        $this->queryBuilder = new PDOQueryBuilder(
+        $credentials = array_merge(Config::get('database', 'mysqli'), ['db_name' =>  'bug_app_testing']);
+        $pdo = new MySQLiConnection($credentials);
+        $this->queryBuilder = new MySQLiQueryBuilder(
             $pdo->connect()
         );
         parent::setUp();
@@ -62,7 +64,7 @@ class QueryBuilderTest extends TestCase
     {
         $results = $this->queryBuilder->table('reports')
             ->select('*')->where('id',1)
-            ->where('report_type','=', 'Report Type 1')->first();
+            ->first();
         self::assertNotNull($results);
         self::assertSame(1,(int)$results->id);
         self::assertSame('Report Type 1', $results->report_type);

@@ -9,7 +9,7 @@ class MySQLiQueryBuilder extends QueryBuilder
 {
 
     private $resultSet;
-    private $result;
+    private $results;
 
     const PARAM_TYPE_INT    = 'i';
     const PARAM_TYPE_STRING = 's';
@@ -17,16 +17,22 @@ class MySQLiQueryBuilder extends QueryBuilder
 
     public function get()
     {
+        $results = [];
         if(!$this->resultSet){
             $this->resultSet = $this->statement->get_result();
-            $this->result = $this->resultSet->fethc_all(MYSQLI_ASSOC);
+            if($this->resultSet){
+                while($object = $this->resultSet->fetch_object()){
+                    $results[] = $object;
+                }
+                $this->results = $results;
+            }
         }
-        return $this->resultSet;
+        return $this->results;
     }
 
     public function count()
     {
-        if(!$this->resultSet){
+        if(!$this->resultSet) {
             $this->get();
         }
         return $this->resultSet ? $this->resultSet->num_rows : false;
@@ -44,11 +50,11 @@ class MySQLiQueryBuilder extends QueryBuilder
 
     public function execute($statement)
     {
-        if(!$statement){
+        if(!$statement) {
             throw new InvalidArgumentException('MySQLi statement is false');
         }
 
-        if ($this->bindings){
+        if($this->bindings){
             $bindings = $this->parseBinding($this->bindings);
             $reflectionObj = new \ReflectionClass('mysqli_stmt');
             $method = $reflectionObj->getMethod('bind_param');
@@ -69,15 +75,14 @@ class MySQLiQueryBuilder extends QueryBuilder
         {
             $results[] = $object;
         }
-        return $this->result = $results;
+        return $this->results = $results;
     }
 
     //----------------------------------------- Internal Methods -----------------------------------------------//
     private function parseBinding(array $params)
     {
         $bindings = [];
-        $count = $this->count($params);
-
+        $count = count($params);
         if($count === 0){
             return $this->bindings;
         }
@@ -94,14 +99,14 @@ class MySQLiQueryBuilder extends QueryBuilder
     private function parseBindingTypes()
     {
         $bindingsTypes = [];
-        foreach ($this->fields as $bindings) {
-            if(is_int($bindings)){
+        foreach ($this->bindings as $binding) {
+            if(is_int($binding)){
                 $bindingsTypes[] = self::PARAM_TYPE_INT;
             }
-            if(is_string($bindings)){
+            if(is_string($binding)){
                 $bindingsTypes[] = self::PARAM_TYPE_STRING;
             }
-            if(is_float($bindings)){
+            if(is_float($binding)){
                 $bindingsTypes[] = self::PARAM_TYPE_DOUBLE;
             }
         }
