@@ -114,6 +114,16 @@ use phpDocumentor\Reflection\Types\Self_;
         return $this->count() ? $this->get()[0] : "";
     }
 
+     /**
+      * @return mixed
+      */
+     public function getConnection()
+     {
+         return $this->conn;
+     }
+
+
+
 
     //----------------------------------------------- Internals Methods -----------------------------------//
     private function passWhere(array $conditions, string $operator)
