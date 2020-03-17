@@ -78,6 +78,17 @@ class MySQLiQueryBuilder extends QueryBuilder
         return $this->results = $results;
     }
 
+    public function beginTransaction()
+    {
+        $this->conn->begin_transaction();
+    }
+
+    public function affected()
+    {
+        $this->statement->store_result();
+        return $this->statement->affected_rows;
+    }
+
     //----------------------------------------- Internal Methods -----------------------------------------------//
     private function parseBinding(array $params)
     {
@@ -112,6 +123,7 @@ class MySQLiQueryBuilder extends QueryBuilder
         }
         return implode('', $bindingsTypes);
     }
+
 
 
 }

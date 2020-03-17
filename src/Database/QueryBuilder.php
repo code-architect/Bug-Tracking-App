@@ -48,6 +48,12 @@ use phpDocumentor\Reflection\Types\Self_;
             }
         }
         $this->passWhere([$column => $value], $operator);
+
+        return $this;
+    }
+
+    public function runQuery()
+    {
         $query = $this->prepare($this->getQuery($this->operation));
         $this->statement = $this->execute($query);
         return $this;
@@ -101,27 +107,23 @@ use phpDocumentor\Reflection\Types\Self_;
 
     public function find($id)
     {
-        return $this->where('id', $id)->first();
+        return $this->where('id', $id)->runQuery()->first();
     }
 
     public function findOneBy(string $field, $value)
     {
-        return $this->where($field, $value)->first();
+        return $this->where($field, $value)->runQuery()->first();
     }
 
     public function first()
     {
-        return $this->count() ? $this->get()[0] : "";
+        return $this->count() ? $this->get()[0] : null;
     }
 
-     /**
-      * @return mixed
-      */
-     public function getConnection()
-     {
-         return $this->conn;
-     }
-
+    public function rollback():void
+    {
+        $this->conn->rollback();
+    }
 
 
 
@@ -143,6 +145,8 @@ use phpDocumentor\Reflection\Types\Self_;
     abstract public function prepare($query);
     abstract public function execute($statement);
     abstract public function fetchInto($className);
+    abstract public function beginTransaction();
+    abstract public function affected();
 
 
 }
