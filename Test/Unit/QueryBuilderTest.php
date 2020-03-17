@@ -110,4 +110,15 @@ class QueryBuilderTest extends TestCase
         self::assertSame($id, $results->id);
         self::assertSame('Report Type 2', $results->report_type);
     }
+
+
+    public function testItCanDeleteGivenId()
+    {
+        $id = $this->insertIntoTable();
+        $count = $this->queryBuilder->table('reports')->delete()->where('id', $id)->count();
+        self::assertEquals(1, $count);
+
+        $result = $this->queryBuilder->select('*')->find($id);
+        self::assertEquals('', $result);
+    }
 }
