@@ -81,4 +81,33 @@ class QueryBuilderTest extends TestCase
         self::assertSame($id, $results->id);
         self::assertSame('Report Type 1', $results->report_type);
     }
+
+    public function testItCanFindById()
+    {
+        $id = $this->insertIntoTable();
+        $results = $this->queryBuilder->select('id, report_type')->find($id);
+        self::assertNotNull($results);
+        self::assertSame($id, $results->id);
+        self::assertSame('Report Type 1', $results->report_type);
+    }
+
+    public function testItCanFindOneByGivingValues()
+    {
+        $id = $this->insertIntoTable();
+        $results = $this->queryBuilder->select('*')->findOneBy('report_type', 'Report Type 1');
+        self::assertNotNull($results);
+        self::assertSame($id, $results->id);
+        self::assertSame('Report Type 1', $results->report_type);
+    }
+
+    public function testItCanUpdateGivenRecord()
+    {
+        $id = $this->insertIntoTable();
+        $count = $this->queryBuilder->table('reports')->update(['report_type' => 'Report Type 2'])->where('id', $id)->count();
+        self::assertEquals(1, $count);
+        $results = $this->queryBuilder->select('*')->findOneBy('report_type', 'Report Type 2');
+        self::assertNotNull($results);
+        self::assertSame($id, $results->id);
+        self::assertSame('Report Type 2', $results->report_type);
+    }
 }
