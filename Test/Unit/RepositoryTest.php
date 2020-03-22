@@ -81,4 +81,24 @@ class RepositoryTest extends TestCase
 
         self::assertNull($bugReport);
     }
+
+
+    public function testItCanFindByCriteria()
+    {
+        $newBugReport = $this->createBugReport();
+        $report = $this->bugReportRepository->findBy([
+            ['report_type', '=', 'Type 2'],
+            ['email', '=', 'john@xyz.com']
+        ]);
+
+        self::assertIsArray($report);
+        self::assertNotEmpty($report);
+        self::assertNotNull($report);
+
+        /** @var BugReport $bugReport */
+        $bugReport = $report[0];
+
+        self::assertSame('Type 2', $bugReport->getReportType());
+        self::assertSame('john@xyz.com', $bugReport->getEmail());
+    }
 }
