@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace App\Database;
 use PDO;
@@ -29,7 +30,7 @@ class PDOQueryBuilder extends QueryBuilder
     public function execute($statement)
     {
         $statement->execute($this->bindings);
-        $this->bindings     = [];
+        $this->bindings = [];
         $this->placeholders = [];
         return $statement;
     }

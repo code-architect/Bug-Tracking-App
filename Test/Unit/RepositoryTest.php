@@ -3,7 +3,9 @@ declare(strict_types=1);
 namespace Test\Unit;
 
 use App\Database\QueryBuilder;
+use App\Entity\BugReport;
 use App\Helpers\DbQueryBuilderFactory;
+use App\Repository\BugReportRepository;
 use PHPUnit\Framework\TestCase;
 
 class RepositoryTest extends TestCase
@@ -13,11 +15,12 @@ class RepositoryTest extends TestCase
      */
     private $queryBuilder;
 
+    /** @var BugReportRepository $bugReportRepository */
     private $bugReportRepository;
 
     protected function setUp()
     {
-        $this->queryBuilder = DbQueryBuilderFactory::make('database', 'mysqli', ['db_name' => 'bug_app_testing']);
+        $this->queryBuilder = DbQueryBuilderFactory::make('database', 'pdo', ['db_name' => 'bug_app_testing']);
         $this->queryBuilder->beginTransaction();
         $this->bugReportRepository = new BugReportRepository($this->queryBuilder);
         parent::setUp();
@@ -27,20 +30,18 @@ class RepositoryTest extends TestCase
     protected function tearDown()
     {
         $this->queryBuilder->rollback();
-        unset($this->queryBuilder);
         parent::tearDown();
     }
 
 
 
-    public function createBugReport():BugReport
+    public function createBugReport(): BugReport
     {
         $bugReport = new BugReport();
         $bugReport->setReportType('Type 2')->setLink('https://xyz-link.com')
             ->setMessage('This is a dummy Message')->setEmail('john@xyz.com');
 
-        $newBugReport = $this->bugReportRepository->create($bugReport);
-        return $newBugReport;
+        return $this->bugReportRepository->create($bugReport);
     }
 
 
@@ -50,10 +51,10 @@ class RepositoryTest extends TestCase
 
         self::assertInstanceOf(BugReport::class, $newBugReport);
         self::assertNotEmpty( $newBugReport->getId());
-        self::assertSame('Type 2', $newBugReport->getReportType);
-        self::assertSame('https://xyz-link.com', $newBugReport->getLink);
-        self::assertSame('This is a dummy Message', $newBugReport->getMessage);
-        self::assertSame('john@xyz.com', $newBugReport->getEmail);
+        self::assertSame('Type 2', $newBugReport->getReportType());
+        self::assertSame('https://xyz-link.com', $newBugReport->getLink());
+        self::assertSame('This is a dummy Message', $newBugReport->getMessage());
+        self::assertSame('john@xyz.com', $newBugReport->getEmail());
     }
 
 
@@ -66,9 +67,10 @@ class RepositoryTest extends TestCase
         $updatedReport = $this->bugReportRepository->update($bugReport);
 
         self::assertInstanceOf(BugReport::class, $updatedReport);
-        self::assertSame('This is from update method', $updatedReport->getReportType);
-        self::assertSame('https://newlink.com/image.png', $updatedReport->getLink);
+        self::assertSame('This is from update method', $updatedReport->getMessage());
+        self::assertSame('https://newlink.com/image.png', $updatedReport->getLink());
     }
+
 
 
     public function testItCanDeleteAGivenEntity()
