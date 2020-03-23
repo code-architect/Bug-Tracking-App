@@ -4,8 +4,10 @@ namespace Test\Functional;
 use App\Database\QueryBuilder;
 use App\Entity\BugReport;
 use App\Helpers\DbQueryBuilderFactory;
+use App\Helpers\HttpClient;
 use App\Repository\BugReportRepository;
 use PHPUnit\Framework\TestCase;
+use function MongoDB\BSON\fromJSON;
 
 class CrudTest extends TestCase
 {
@@ -15,6 +17,7 @@ class CrudTest extends TestCase
     /** @var QueryBuilder $queryBuilder */
     private $queryBuilder;
 
+    /** @var HttpClient $client */
     private $client;
 
     protected function setUp()
@@ -36,7 +39,10 @@ class CrudTest extends TestCase
     public function testItCanCreateReportUsingPostRequest()
     {
         $postData = $this->getPostData(['add' => true]);
-        $this->client->post("http://localhost/bug_tracking_app/src/add.php", $postData);
+        $response = $this->client->post("http://localhost/bug_tracking_app/src/add.php", $postData);
+
+        $response = json_decode($response, true);
+        self::assertEquals(200, $response['statusCode']);
 
         $result = $this->repository->findBy([
             ['report_type', '=', 'Audio Issue'],
@@ -68,7 +74,10 @@ class CrudTest extends TestCase
             'link'          =>  'https://updated.com',
             'report_id'     =>  $bugReport->getId()
         ]);
-        $this->client->post("http://localhost/bug_tracking_app/src/update.php", $postData);
+        $response = $this->client->post("http://localhost/bug_tracking_app/src/update.php", $postData);
+
+        $response = json_decode($response, true);
+        self::assertEquals(200, $response['statusCode']);
 
         /** @var BugReport $result */
         $result = $this->repository->find($bugReport->getId());
@@ -81,14 +90,20 @@ class CrudTest extends TestCase
     }
 
 
-
+    /**
+     * @depends testItCanUpdateReportUsingPostRequest
+     * @param BugReport $bugReport
+     */
     public function testItCanDeleteReportUsingPostRequest(BugReport $bugReport)
     {
         $postData = [
             'delete'        => true,
             'report_id'     =>  $bugReport->getId()
         ];
-        $this->client->post("http://localhost/bug_tracking_app/src/delete.php", $postData);
+        $response = $this->client->post("http://localhost/bug_tracking_app/src/delete.php", $postData);
+
+        $response = json_decode($response, true);
+        self::assertEquals(200, $response['statusCode']);
 
         /** @var BugReport $result */
         $result = $this->repository->find($bugReport->getId());

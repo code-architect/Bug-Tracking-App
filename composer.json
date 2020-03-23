@@ -4,7 +4,8 @@
     "ext-json": "*",
     "ext-pdo": "*",
     "ext-mysqli": "*",
-    "ext-http": "*"
+    "ext-http": "*",
+    "ext-curl": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "^7",
