@@ -39,8 +39,7 @@ class CrudTest extends TestCase
     public function testItCanCreateReportUsingPostRequest()
     {
         $postData = $this->getPostData(['add' => true]);
-        $response = $this->client->post("http://localhost/bug_tracking_app/src/add.php", $postData);
-
+        $response = $this->client->post("http://localhost/sand_box/bug_tracking_app/Src/View/add.php", $postData);
         $response = json_decode($response, true);
         self::assertEquals(200, $response['statusCode']);
 
@@ -74,9 +73,10 @@ class CrudTest extends TestCase
             'link'          =>  'https://updated.com',
             'report_id'     =>  $bugReport->getId()
         ]);
-        $response = $this->client->post("http://localhost/bug_tracking_app/src/update.php", $postData);
+        $response = $this->client->post("http://localhost/sand_box/bug_tracking_app/src/View/update.php", $postData);
 
         $response = json_decode($response, true);
+        var_dump($response);die();
         self::assertEquals(200, $response['statusCode']);
 
         /** @var BugReport $result */
@@ -100,7 +100,7 @@ class CrudTest extends TestCase
             'delete'        => true,
             'report_id'     =>  $bugReport->getId()
         ];
-        $response = $this->client->post("http://localhost/bug_tracking_app/src/delete.php", $postData);
+        $response = $this->client->post("http://localhost/sand_box/bug_tracking_app/src/View/delete.php", $postData);
 
         $response = json_decode($response, true);
         self::assertEquals(200, $response['statusCode']);
