@@ -9,6 +9,7 @@ use App\Database\QueryBuilder;
 use App\Exception\DatabaseConnectionException;
 use App\Exception\MissingArgumentException;
 use App\Exception\NotFoundException;
+use phpDocumentor\Reflection\Types\Self_;
 
 class DbQueryBuilderFactory
 {

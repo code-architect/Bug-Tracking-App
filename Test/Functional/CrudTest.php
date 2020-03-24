@@ -22,7 +22,7 @@ class CrudTest extends TestCase
 
     protected function setUp()
     {
-        $this->queryBuilder = DbQueryBuilderFactory::make('database', 'pdo', ['db_name' => 'bug_app_testing']);
+        $this->queryBuilder = DbQueryBuilderFactory::make();
         //$this->queryBuilder->beginTransaction();
         $this->repository = new BugReportRepository($this->queryBuilder);
         $this->client = new HttpClient();
@@ -76,7 +76,6 @@ class CrudTest extends TestCase
         $response = $this->client->post("http://localhost/sand_box/bug_tracking_app/src/View/update.php", $postData);
 
         $response = json_decode($response, true);
-        var_dump($response);die();
         self::assertEquals(200, $response['statusCode']);
 
         /** @var BugReport $result */
