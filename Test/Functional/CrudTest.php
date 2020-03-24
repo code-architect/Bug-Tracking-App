@@ -82,10 +82,10 @@ class CrudTest extends TestCase
         $result = $this->repository->find($bugReport->getId());
 
         self::assertInstanceOf(BugReport::class, $result);
-        self::assertSame('https://xyz-link.com', $bugReport->getLink());
-        self::assertSame( 'There is an video issue on edison tutorial, please check and fix it', $bugReport->getMessage());
+        self::assertSame('https://updated.com', $result->getLink());
+        self::assertSame( 'There is an video issue on edison tutorial, please check and fix it', $result->getMessage());
 
-        return $bugReport;
+        return $result;
     }
 
 
@@ -107,7 +107,7 @@ class CrudTest extends TestCase
         /** @var BugReport $result */
         $result = $this->repository->find($bugReport->getId());
 
-        self::assertNull($bugReport);
+        self::assertNull($result);
     }
 
 

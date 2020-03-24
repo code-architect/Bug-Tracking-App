@@ -16,7 +16,7 @@ class ApplicationTest extends TestCase
     {
         $app = new App();
         self::assertTrue($app->isRunningFromConsole());
-        self::assertSame('local', $app->getEnvironment());
+        self::assertSame('test', $app->getEnvironment());
         self::assertNotNull($app->getLogPath());
         $this->assertInstanceOf(\DateTime::class, $app->getServerTime());
     }

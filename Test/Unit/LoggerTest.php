@@ -36,7 +36,7 @@ class LoggerTest extends TestCase
         $this->logger->log(Loglevel::ALERT,'Testing Alert Logs');
 
         //creating a file and checking if file exists
-        $fileName = sprintf("%s/%s-%s.log", $app->getLogPath(), 'local', date("j.n.Y"));
+        $fileName = sprintf("%s/%s-%s.log", $app->getLogPath(), 'test', date("j.n.Y"));
         self::assertFileExists($fileName);
 
         // checking if the log file contains the above given string

@@ -44,10 +44,11 @@ abstract class Repository implements RepositoryInterface
         return $this->queryBuilder->runQuery()->fetchInto(static::$className);
     }
 
-    public function findAll (): array
+    public function findAll ()
     {
-        return $this->queryBuilder->table(static::$table)
-            ->select()->runQuery()->fetchInto(static::$className);
+//        return $this->queryBuilder->table(static::$table)
+//            ->select()->runQuery()->fetchInto(static::$className);
+        return $this->queryBuilder->raw('SELECT * FROM reports')->fetchInto(static::$className);
     }
 
     public function sql (string $query)
